@@ -10,47 +10,8 @@ A flexible, macro-powered asynchronous message routing library for Rust.
 
 ## Usage
 
-Add to your `Cargo.toml`:
-
-```toml
-[dependencies]
-app-router = "0.1.0"
-```
-
-### Create Handlers, Messages and a Router
-
-```rust
-struct MySource;
-struct MyHandler;
-struct MyMessage;
-
-app_router::app_router! {
-    handlers: [ my_handler: MyHandler ]
-    routes: [
-        MySource, MyMessage: [my_handler]
-    ]
-}
-```
-
-### Define Handlers
-
-```rust
-
-impl <Router: Sync> app_router::Handle<MyMessage, Router> for MyHandler {
-    async fn handle(&self, message: &MyMessage, router: &Router) {
-        // handle message
-    }
-}
-
-```
-
-### Send a Message
-
-```rust
-let router = AppRouter { my_handler: MyHandler {} };
-let msg = MyMessage;
-MySource::send(&msg, &router).await;
-```
+See [example](examples/simple/main.rs) for usage. 
+The [middleware](examples/simple/middleware.rs) does not depend on the `AppRouter`.
 
 ## Documentation
 

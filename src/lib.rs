@@ -1,10 +1,10 @@
 /// A trait for routing messages to handlers asynchronously.
 ///
 /// # Type Parameters
-/// - `H`: The handler type.
+/// - `Handler`: The handler type.
 /// - `Message`: The message type to route.
 /// - `Response`: The response type returned by the route (defaults to `()`).
-pub trait AppRoute<H, Message, Response = ()> {
+pub trait AppRoute<Handler, Message, Response = ()> {
     /// Routes a message to the appropriate handler asynchronously.
     ///
     /// # Arguments
@@ -89,8 +89,8 @@ macro_rules! app_router {
         }
 
         mod trait_impls {
-            use app_router::{AppRoute, Sender};
             use super::*;
+            use app_router::{AppRoute, Sender};
 
             $(
                 impl Sender<$message, AppRouter$(, $response)?> for $source {
@@ -121,10 +121,10 @@ macro_rules! app_router {
 /// See examples for usage without depending on the `AppRouter` type directly.
 ///
 /// # Type Parameters
-/// - `M`: The message type handled.
+/// - `Message`: The message type handled.
 /// - `Router`: The router type.
-/// - `R`: The response type (defaults to `()`).
-pub trait Handle<M, Router, R = ()> {
+/// - `Response`: The response type (defaults to `()`).
+pub trait Handle<Message, Router, Response = ()> {
     /// Handles a message asynchronously.
     ///
     /// # Arguments
@@ -133,5 +133,9 @@ pub trait Handle<M, Router, R = ()> {
     ///
     /// # Returns
     /// An async future resolving to the response.
-    fn handle(&self, message: &M, router: &Router) -> impl std::future::Future<Output = R> + Send;
+    fn handle(
+        &self,
+        message: &Message,
+        router: &Router,
+    ) -> impl std::future::Future<Output = Response> + Send;
 }
